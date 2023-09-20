@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();  // getting router
 require('../db/connection');  // Using Database connection 
 const User = require('../model/userSchema'); //To check User is already there or not
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Authenticate = require('../middleware/authenticate');
-const nodemailer = require("nodemailer");
-const { EMAIL, PASSWORD } = require("./env");
-const MailGen = require("mailgen");
+const bcrypt = require('bcryptjs'); //To encrypt password
+const jwt = require('jsonwebtoken'); //To generate token
+const Authenticate = require('../middleware/authenticate'); //To authenticate user
+const nodemailer = require("nodemailer"); //To send email 
+const { EMAIL, PASSWORD } = require("./env"); //To hide the email and pass
+const MailGen = require("mailgen"); //TO generate email template
 
 const jwt_Secret = "scjaijm*(#-3)[]sdvdss[sdc65s561!4r65264-asdpll^&#@";
 
@@ -78,8 +78,9 @@ router.post('/forget-password', async (req, res) => {
         if (!oldUser) { return res.status(400).send({ error: 'User do not exists' }) }
         const secret = jwt_Secret + oldUser.password;
         const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { noTimestamp: true });
+        //This is the link sending to user which redirects to Reset password URL
         const link = `http://localhost:8080/reset-password/${oldUser._id}/${token}`;
-
+        //Basic configations of nodemail
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -87,7 +88,7 @@ router.post('/forget-password', async (req, res) => {
                 pass: PASSWORD,
             },
         });
-
+        //To generate email template
         let mailGenerator = new MailGen({
             theme: "default",
             product: {
@@ -95,7 +96,7 @@ router.post('/forget-password', async (req, res) => {
                 link: "https://mailgen.js/"
             }
         });
-
+        //This will be the body of email
         let response = {
             body: {
                 name: oldUser.name,
@@ -115,7 +116,7 @@ router.post('/forget-password', async (req, res) => {
             subject: "Password Reset",
             html: mail
         }
-
+        // Sending email
         const info = transporter.sendMail(message);
         if (info) {
             console.log(link);
