@@ -119,10 +119,10 @@ router.post('/forget-password', async (req, res) => {
 
         const info = transporter.sendMail(message);
         if (info) {
+            console.log(link);
             return res.send(`Sent reset password Link to ${email}`);
         }
-
-        console.log(link);
+        return res.status(500).send("Something went wrong");
         // return res.send(`Sent reset password Link to ${email}`);
     } catch (err) {
         console.log(err);
