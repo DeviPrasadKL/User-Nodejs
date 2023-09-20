@@ -1,0 +1,2 @@
+I have created a backend for user Sign in, Sign up and forgot password. 
+Also added the email feature for forgot password so that whenever user click on forgot password reset link will be sent through personal email.
