@@ -1,24 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+        }
+
+        .outerdiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        @media (max-width: 450px) {
+            .form {
+                width: none;
+            }
+
+            html {
+                font-size: 50%;
+            }
+
+            .outerContainer {
+                height: 26rem !important;
+            }
+        }
+
+        .outerContainer {
+            width: 30rem;
+            height: 20rem;
+            background-color: white;
+            padding: 3.125em;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 5px 5px 15px -1px rgba(0, 0, 0, 0.75);
+        }
+
+        .container {
+            padding-bottom: 3rem;
+        }
+
+        .form {
+            width: 30rem;
+            height: 20rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .reset-password {
+            color: rgb(77, 75, 75);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            font-weight: bold;
+            font-size: 2rem;
+            margin-bottom: 0.5em;
+        }
+
+        .form--input {
+            width: 100%;
+            margin-bottom: 1.25em;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid gray;
+            padding: 0.8em;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .form--input:focus {
+            border: 1px solid rgb(74, 136, 217);
+            outline: none;
+        }
+
+        .form--marketing {
+            display: flex;
+            margin-bottom: 1.25em;
+            align-items: center;
+        }
+
+        .form--marketing>input {
+            margin-right: 0.625em;
+        }
+
+        .form--marketing>label {
+            color: grey;
+        }
+
+        .checkbox,
+        input[type="checkbox"] {
+            accent-color: rgb(39, 145, 193);
+        }
+
+        .form--submit {
+            width: 50%;
+            padding: 0.625em;
+            font-weight: 800;
+            border-radius: 5px;
+            color: white;
+            background-color: rgb(65, 137, 209);
+            border: 1px solid #639;
+            cursor: pointer;
+        }
+
+        .form--submit:hover {
+            color: rgb(65, 137, 209);
+            background-color: white;
+            border: 1px solid rgb(65, 137, 209);
+            cursor: pointer;
+            transition: 0.5s;
+        }
+
+        .form--submit:active {
+            color: black;
+            background-color: rgba(242, 245, 25, 0.916);
+            border: 1px solid black;
+            cursor: pointer;
+            transition: 0.5s;
+        }
+
+        .buttons-div {
+            display: flex;
+            justify-content: center;
+            width: 20rem;
+        }
+    </style>
 </head>
+
 <body>
-    <h2><%= email%></h2>
-    <form action="" method="post">
-        <input type="password" name="password" id="password" placeholder="Password">
-        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="ConfirmPassword">
-        <input type="submit" value="submit">
-    </form>
+    <div class="outerContainer">
+        <div class='outerdiv'>
+            <form class="form" action="" method="post">
+                <span class="reset-password">Reset Password</span>
+                <h2>
+                    <%= email%>
+                </h2>
+                <input type="password" class="form--input" name="password" id="password" placeholder="Password">
+                <input type="password" class="form--input" name="confirmPassword" id="confirmPassword"
+                    placeholder="ConfirmPassword">
+
+                <div class='buttons-div'>
+                    <input class="form--submit" type="submit" value="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         var status = '<%- JSON.stringify(status)%>';
-        if(JSON.parse(status) == "verified"){
-            if(confirm("Do you want to proceed?")){
+        if (JSON.parse(status) == "verified") {
+            if (confirm("Do you want to proceed?")) {
                 window.location.href = "http://localhost/8080/home";
             }
         }
     </script>
 </body>
+
 </html>
