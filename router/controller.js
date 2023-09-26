@@ -58,11 +58,11 @@ router.post('/signin', async (req, res) => {
             });
 
             if (isMatch) {
-                return res.status(200).send({ message: 'User Signin Success' })
+                return res.status(200).send({ message: 'User Login Successfull' })
             }
-            return res.status(400).send({ error: 'Invalid Credential' })
+            return res.status(401).send({ message: 'Invalid Credential' })
         } else {
-            return res.status(400).send({ error: 'Invalid username or password' })
+            return res.status(401).send({ message: 'Invalid username or password' })
         }
     } catch (err) {
         console.log(err);
