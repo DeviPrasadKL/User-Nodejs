@@ -15,13 +15,13 @@ const jwt_Secret = "scjaijm*(#-3)[]sdvdss[sdc65s561!4r65264-asdpll^&#@";
 router.post('/signup', async (req, res) => {
     const { name, email, phoneNumber, password, confirmPassword } = req.body;
     if (!name || !email || !phoneNumber || !password || !confirmPassword) {
-        return res.status(422).send({ error: "Please fill all the fields" })
+        return res.status(422).send({ message: "Please fill all the fields" })
     }
     try {
         // To find the existing movie
         const userExists = await User.findOne({ email: email })
         if (userExists) {
-            return res.status(422).send({ error: "User already exists" });
+            return res.status(422).send({ message: "User already exists" });
         }
         const user = new User({ name, email, phoneNumber, password, confirmPassword });
 
@@ -73,9 +73,9 @@ router.post('/signin', async (req, res) => {
 router.post('/forget-password', async (req, res) => {
     try {
         const { email } = req.body;
-        if (!email) { return res.status(400).send({ error: 'Please Enter the email' }) }
+        if (!email) { return res.status(400).send({ message: 'Please Enter the email' }) }
         const oldUser = await User.findOne({ email: email });
-        if (!oldUser) { return res.status(400).send({ error: 'User do not exists' }) }
+        if (!oldUser) { return res.status(401).send({ message: 'User do not exists' }) }
         const secret = jwt_Secret + oldUser.password;
         const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { noTimestamp: true });
         //This is the link sending to user which redirects to Reset password URL
@@ -120,9 +120,9 @@ router.post('/forget-password', async (req, res) => {
         const info = transporter.sendMail(message);
         if (info) {
             console.log(link);
-            return res.send(`Sent reset password Link to ${email}`);
+            return res.send({ message: `Sent reset password Link to ${email}` });
         }
-        return res.status(500).send("Something went wrong");
+        return res.status(500).send({ message: "Something went wrong" });
     } catch (err) {
         console.log(err);
         return res.status(500).send({ error: err });
@@ -133,14 +133,14 @@ router.get('/reset-password/:id/:token', async (req, res) => {
     try {
         const { id, token } = req.params;
         const oldUser = await User.findOne({ _id: id });
-        if (!oldUser) { return res.status(400).send({ error: 'User do not exists' }) }
+        if (!oldUser) { return res.status(400).send({ message: 'User do not exists' }) }
         const secret = jwt_Secret + oldUser.password;
         const verify = jwt.verify(token, secret);
         console.log("verified");
         return res.render('index', { email: verify.email, status: "Not verified" })
     } catch (err) {
         console.log(err);
-        return res.send("User Not Verified");
+        return res.send({ message: "User Not Verified" });
     }
 })
 
@@ -149,7 +149,7 @@ router.post('/reset-password/:id/:token', async (req, res) => {
         const { id, token } = req.params;
         const { password, confirmPassword } = req.body;
         const oldUser = await User.findOne({ _id: id });
-        if (!oldUser) { return res.status(400).send({ error: 'User do not exists' }) }
+        if (!oldUser) { return res.status(400).send({ message: 'User do not exists' }) }
         const secret = jwt_Secret + oldUser.password;
         const verify = jwt.verify(token, secret);
         console.log("verified");
@@ -162,13 +162,13 @@ router.post('/reset-password/:id/:token', async (req, res) => {
                 confirmPassword: encryptedConfirmPassword
             })
         } else {
-            return res.status(400).send("Passwords do not match");
+            return res.status(400).send({ message: "Passwords do not match" });
         }
         // return res.send("Password updated");
         return res.render('index', { email: verify.email, status: "verified" })
     } catch (err) {
         console.log(err);
-        return res.send("Something went wrong");
+        return res.send({ message: "Something went wrong" });
     }
 })
 
@@ -178,7 +178,7 @@ router.get('/about', Authenticate, (req, res) => {
 
 router.get('/logout', (req, res) => {
     res.clearCookie('jwttoken', { path: '/' });
-    return res.status(200).send("User logged out");
+    return res.status(200).send({ message: "User logged out" });
 })
 
 
